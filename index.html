@@ -4,50 +4,31 @@
   <meta charset="UTF-8" />
   <meta property="og:title" content="Amazing AI Tool to Earn Online!" />
   <meta property="og:description" content="Check this free tool to start earning online with AI." />
-  <meta property="og:url" content="https://rajonbd1.github.io/redirect-test/" />
   <meta property="og:image" content="https://res.cloudinary.com/dywp2mseb/image/upload/v1751484321/sample.jpg">
+  <meta property="og:url" content="https://rajonbd1.github.io/redirect-test/" />
   <title>Redirecting...</title>
-</head>
-<body>
-  <p>Redirecting you shortly...</p>
   <script>
-    // Store user agent string for robust check
     const ua = navigator.userAgent;
 
-    // More comprehensive Facebook crawler detection
     const isFacebookCrawler = (
         ua.includes('facebookexternalhit') ||
         ua.includes('Facebot') ||
-        ua.includes('facebookplatform') // Add more as found from debugger/research
+        ua.includes('facebookplatform') // Add more as needed, though these are the main ones
     );
 
-    // Debugging output for the console (will not be visible to users)
     console.log("User Agent:", ua);
     console.log("Is Facebook Crawler:", isFacebookCrawler);
 
-    // Function to perform the redirect
-    function doRedirect() {
-        window.location.replace("https://google.com"); // Use replace for better history management
-    }
-
-    // Delay the redirect slightly to ensure OG tags are parsed, but only for non-crawlers
+    // ONLY redirect if it's NOT a Facebook crawler
     if (!isFacebookCrawler) {
-        // Give the browser a very brief moment to process the initial HTML (including OG tags)
-        // This is a gamble; crawlers are fast.
-        setTimeout(doRedirect, 10); // Redirect after 10 milliseconds
+      // You can keep a very short delay or remove it, but the key is the !isFacebookCrawler check
+      // window.location.href = "https://google.com"; // Original
+      window.location.replace("https://google.com"); // Use replace for better history management
     } else {
-        console.log("Facebook crawler detected - no redirect.");
-        // Optionally, add a no-op or a clear message for the crawler
-        // For a crawler, we want it to *stay* on this page and parse the OG tags.
+      // If it's a Facebook crawler, do absolutely nothing.
+      // The page should remain as is, allowing it to scrape the OG tags.
+      console.log("Facebook crawler detected - no redirect. Displaying OG content.");
     }
-
-    // Fallback for very old browsers or crawlers that don't execute JS or for redundancy
-    // This meta refresh is what the debugger identified, so it's a double-edged sword.
-    // It's good as a fallback if JS is disabled, but can be problematic for crawlers.
-    // If you MUST use it, ensure it's conditional. But the JS approach is generally preferred.
-    // Example if you choose to use it as a non-JS fallback (less ideal for this specific use case):
-    // document.write('<meta http-equiv="refresh" content="0; url=https://google.com">');
-    // But this meta tag would be for *all* visitors. Better to stick with the JS.
   </script>
 </head>
 <body>
