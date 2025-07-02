@@ -11,17 +11,46 @@
 <body>
   <p>Redirecting you shortly...</p>
   <script>
-    // Simple user-agent check for Facebook crawler
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-    const isFacebookCrawler = ua.indexOf('facebookexternalhit') !== -1 || ua.indexOf('Facebot') !== -1;
+    // Store user agent string for robust check
+    const ua = navigator.userAgent;
 
-    if (!isFacebookCrawler) {
-      // Redirect only if NOT Facebook crawler
-      window.location.href = "https://google.com";  // Change to your desired redirect URL
-    } else {
-      // Do nothing, so Facebook gets the OG tags and preview
-      console.log("Facebook crawler detected - no redirect");
+    // More comprehensive Facebook crawler detection
+    const isFacebookCrawler = (
+        ua.includes('facebookexternalhit') ||
+        ua.includes('Facebot') ||
+        ua.includes('facebookplatform') // Add more as found from debugger/research
+    );
+
+    // Debugging output for the console (will not be visible to users)
+    console.log("User Agent:", ua);
+    console.log("Is Facebook Crawler:", isFacebookCrawler);
+
+    // Function to perform the redirect
+    function doRedirect() {
+        window.location.replace("https://google.com"); // Use replace for better history management
     }
+
+    // Delay the redirect slightly to ensure OG tags are parsed, but only for non-crawlers
+    if (!isFacebookCrawler) {
+        // Give the browser a very brief moment to process the initial HTML (including OG tags)
+        // This is a gamble; crawlers are fast.
+        setTimeout(doRedirect, 10); // Redirect after 10 milliseconds
+    } else {
+        console.log("Facebook crawler detected - no redirect.");
+        // Optionally, add a no-op or a clear message for the crawler
+        // For a crawler, we want it to *stay* on this page and parse the OG tags.
+    }
+
+    // Fallback for very old browsers or crawlers that don't execute JS or for redundancy
+    // This meta refresh is what the debugger identified, so it's a double-edged sword.
+    // It's good as a fallback if JS is disabled, but can be problematic for crawlers.
+    // If you MUST use it, ensure it's conditional. But the JS approach is generally preferred.
+    // Example if you choose to use it as a non-JS fallback (less ideal for this specific use case):
+    // document.write('<meta http-equiv="refresh" content="0; url=https://google.com">');
+    // But this meta tag would be for *all* visitors. Better to stick with the JS.
   </script>
-</body>
+</head>
+<body>
+  <p>Redirecting you shortly...</p>
+  </body>
 </html>
